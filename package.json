@@ -1,0 +1,106 @@
+{
+  "name": "opencode-fallback",
+  "version": "0.1.0",
+  "description": "Describe images, PDFs, and audio with a multimodal fallback model when your active model cannot read them.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zensi-dev/opencode-fallback.git"
+  },
+  "files": [
+    "dist/server.js",
+    "dist/server.js.map",
+    "dist/server.d.ts",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "main": "./dist/server.js",
+  "types": "./dist/server.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./tui": {
+      "import": "./src/tui.tsx",
+      "types": "./src/tui.tsx"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "oxfmt",
+    "lint": "oxlint",
+    "knip": "knip",
+    "typecheck": "tsc --noEmit",
+    "prepack": "bun run build",
+    "prepublishOnly": "bun run typecheck && bun run lint && bun run test"
+  },
+  "dependencies": {
+    "@ai-sdk/amazon-bedrock": "^4.0.119",
+    "@ai-sdk/anthropic": "^3.0.85",
+    "@ai-sdk/azure": "^3.0.76",
+    "@ai-sdk/cohere": "^3.0.39",
+    "@ai-sdk/deepinfra": "^2.0.55",
+    "@ai-sdk/fireworks": "^2.0.57",
+    "@ai-sdk/google": "^3.0.83",
+    "@ai-sdk/google-vertex": "^4.0.147",
+    "@ai-sdk/groq": "^3.0.42",
+    "@ai-sdk/mistral": "^3.0.40",
+    "@ai-sdk/openai": "^3.0.73",
+    "@ai-sdk/openai-compatible": "^2.0.51",
+    "@ai-sdk/perplexity": "^3.0.36",
+    "@ai-sdk/togetherai": "^2.0.56",
+    "@ai-sdk/xai": "^3.0.96",
+    "@openrouter/ai-sdk-provider": "^2.9.1",
+    "ai": "^6.0.208"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.17.0",
+    "@opentui/core": "^0.3.4",
+    "@opentui/keymap": "^0.3.4",
+    "@opentui/solid": "^0.3.4",
+    "@types/node": "^22.10.0",
+    "knip": "^6.23.0",
+    "oxfmt": "^0.56.0",
+    "oxlint": "^1.71.0",
+    "solid-js": "^1.9.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  },
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.17.0",
+    "@opentui/core": ">=0.3.4",
+    "@opentui/keymap": ">=0.3.4",
+    "@opentui/solid": ">=0.3.4",
+    "solid-js": ">=1.9.0"
+  },
+  "peerDependenciesMeta": {
+    "@opentui/keymap": {
+      "optional": true
+    },
+    "@opentui/core": {
+      "optional": true
+    },
+    "@opentui/solid": {
+      "optional": true
+    },
+    "solid-js": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=20",
+    "opencode": ">=1.17.0"
+  },
+  "packageManager": "bun@1.2.21"
+}
