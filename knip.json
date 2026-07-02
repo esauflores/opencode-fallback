@@ -1,7 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
-  "entry": ["src/server.ts", "src/tui.tsx"],
   "project": ["src/**/*.ts", "src/**/*.tsx", "test/**/*.ts", "*.ts"],
-  "ignoreDependencies": ["@ai-sdk/*", "@openrouter/ai-sdk-provider", "ai"],
-  "ignoreBinaries": ["tsc", "oxc"]
+  "ignoreDependencies": ["@ai-sdk/*", "@openrouter/ai-sdk-provider"]
 }

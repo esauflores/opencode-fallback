@@ -5,25 +5,25 @@ Multimodal fallback plugin for [opencode](https://opencode.ai). When your active
 ## Setup
 
 ```bash
-bun install        # install deps (Bun required)
-bun run build      # build server → dist/server.js
-bun run typecheck  # verify types
-bun run test       # run test suite
+pnpm install        # install deps
+pnpm run build      # build server → dist/server.js
+pnpm run typecheck  # verify types
+pnpm run test       # run test suite
 ```
 
 ## Dev workflow
 
 The repo self-loads as a local plugin via `.opencode/*.json` — open opencode from the repo root and it picks up the dev version.
 
-| What you change | What you do |
-|----------------|-------------|
-| `src/server.ts` | `bun run build` (or `bun run dev` for watch mode), then restart opencode |
-| `src/tui.tsx` | Just restart opencode (loaded as raw TSX, no build) |
+| What you change | What you do                                                                |
+| --------------- | -------------------------------------------------------------------------- |
+| `src/server.ts` | `pnpm run build` (or `pnpm run dev` for watch mode), then restart opencode |
+| `src/tui.tsx`   | Just restart opencode (loaded as raw TSX, no build)                        |
 
 ## Before committing
 
 ```bash
-bun run build && bun run typecheck && bun run test && bun run lint && bun run format
+pnpm run build && pnpm run typecheck && pnpm run test && pnpm run lint && pnpm run format
 ```
 
 ## Architecture
@@ -80,8 +80,8 @@ Stored at `~/.local/share/opencode/opencode-fallback.json`. Use `/fallback` in o
 ## Tests
 
 ```bash
-bun run test          # vitest run
-bun run test:watch    # vitest watch mode
+pnpm run test          # vitest run
+pnpm run test:watch    # vitest watch mode
 ```
 
 Uses mock `fetch` + fixture files under `test/fixtures/`. No external services needed.

@@ -1,5 +1,5 @@
 {
-  "ignorePatterns": ["dist", "node_modules", "bun.lock"],
+  "ignorePatterns": ["dist", "node_modules", "pnpm-lock.yaml"],
   "env": {
     "node": true,
     "es2022": true

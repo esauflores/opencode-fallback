@@ -239,7 +239,14 @@ const server: Plugin = async (input: PluginInput, rawOptions?: PluginOptions) =>
       }
       const resolvedKey = resolveKey(modelsData, fb.providerID, { providerConfig });
       if (!resolvedKey) continue;
-      const prompt = config.modalities[hit.modality]?.prompt || DEFAULT_PROMPTS[hit.modality];
+      const userTexts = (messages[hit.messageIdx]?.parts ?? [])
+        .filter((p: any) => p.type === "text" && typeof p.text === "string")
+        .map((p: any) => p.text)
+        .join("\n");
+      const basePrompt = config.modalities[hit.modality]?.prompt || DEFAULT_PROMPTS[hit.modality];
+      const prompt = userTexts
+        ? `${basePrompt}\n\nThe user's query about this file:\n${userTexts}`
+        : basePrompt;
       tasks.push(
         limit(async () => {
           const controller = new AbortController();
@@ -324,7 +331,7 @@ const server: Plugin = async (input: PluginInput, rawOptions?: PluginOptions) =>
         const id = event.properties.id;
         activeModels.delete(id);
         caches.delete(id);
-        for (const k of [...toastShown]) if (k.startsWith(`${id}:`)) toastShown.delete(k);
+        for (const k of toastShown) if (k.startsWith(`${id}:`)) toastShown.delete(k);
       }
       return Promise.resolve();
     },

@@ -41,8 +41,8 @@
     "lint": "oxlint",
     "knip": "knip",
     "typecheck": "tsc --noEmit",
-    "prepack": "bun run build",
-    "prepublishOnly": "bun run typecheck && bun run lint && bun run test"
+    "prepack": "pnpm run build",
+    "prepublishOnly": "pnpm run typecheck && pnpm run lint && pnpm run test"
   },
   "dependencies": {
     "@ai-sdk/amazon-bedrock": "^4.0.119",
@@ -102,5 +102,5 @@
     "node": ">=20",
     "opencode": ">=1.17.0"
   },
-  "packageManager": "bun@1.2.21"
+  "packageManager": "pnpm@11.9.0"
 }

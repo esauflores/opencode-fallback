@@ -2,30 +2,31 @@
 
 ## Package Manager
 
-- Use Bun for installs, scripts, and lockfile management.
-- Do not add npm, pnpm, or yarn lockfiles. Root lockfile should be `bun.lock`.
-- Run `bun install` after dependency changes. Prefer `bun install --frozen-lockfile` in CI.
+- Use pnpm for installs, scripts, and lockfile management.
+- Do not add npm, bun, or yarn lockfiles. Root lockfile should be `pnpm-lock.yaml`.
+- Run `pnpm install` after dependency changes. Prefer `pnpm install --frozen-lockfile` in CI.
 
 ## Commands
 
-| Task | Command |
-|------|---------|
-| Install | `bun install` |
-| Build | `bun run build` |
-| Watch | `bun run dev` |
-| Typecheck | `bun run typecheck` |
-| Tests | `bun run test` |
-| Tests watch | `bun run test:watch` |
-| Lint/format | `bun run format` |
-| Dead code | `bun run knip` |
+| Task        | Command               |
+| ----------- | --------------------- |
+| Install     | `pnpm install`        |
+| Build       | `pnpm run build`      |
+| Watch       | `pnpm run dev`        |
+| Typecheck   | `pnpm run typecheck`  |
+| Tests       | `pnpm run test`       |
+| Tests watch | `pnpm run test:watch` |
+| Lint/format | `pnpm run format`     |
+| Dead code   | `pnpm run knip`       |
 
-Run `bun run build && bun run typecheck && bun run test && bun run format` before considering work done.
+Run `pnpm run build && pnpm run typecheck && pnpm run test && pnpm run format` before considering work done.
 
 ## Architecture
 
 This package is an opencode plugin named `opencode-fallback`. It provides multimodal fallback: when the user's active model can't read images, PDFs, audio, or video, a separate fallback model describes the content and the description is injected as text into the chat.
 
 Two plugin targets exposed through `package.json` exports:
+
 - `./server` → `dist/server.js`, built from `src/server.ts`.
 - `./tui` → `src/tui.tsx`, loaded by opencode TUI runtime as raw TSX.
 
@@ -33,23 +34,23 @@ Flat `src/` directory — no subdirectories. Each file is a single concern.
 
 ### Source files
 
-| File | Role |
-|------|------|
-| `types.ts` | Shared types: `Modality`, `ModalityConfig`, `PluginConfig`, `SelectedFallback`, provider/model entry shapes |
-| `util.ts` | MIME-to-modality mapping, base64 decoding, file:// attachment reader, hash, secret redaction |
-| `config.ts` | Plugin config read/write/normalize, XDG paths, `isModalityActive` guard |
-| `auth.ts` | API key resolution chain: auth.json → provider config → env vars (with allowlist) |
-| `models.ts` | Load/merge/fetch models.json catalog, capability lookups, opencode config → provider config |
-| `describe.ts` | Dynamic import of provider package + `ai.generateText` to describe an attachment |
-| `parts.ts` | Scan messages for unsupported file parts, replace with synthetic text descriptions |
-| `prompts.ts` | Default analysis prompts per modality |
-| `server.ts` | Plugin entry: hooks for `chat.message`, `chat.params`, `experimental.chat.messages.transform`, `config`, `event`. Orchestrates cache, concurrency limiter, fallback selection, transform pipeline |
-| `tui.tsx` | `/fallback` interactive config UI: pick providers/models per modality, edit prompts and settings |
+| File          | Role                                                                                                                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `types.ts`    | Shared types: `Modality`, `ModalityConfig`, `PluginConfig`, `SelectedFallback`, provider/model entry shapes                                                                                       |
+| `util.ts`     | MIME-to-modality mapping, base64 decoding, file:// attachment reader, hash, secret redaction                                                                                                      |
+| `config.ts`   | Plugin config read/write/normalize, XDG paths, `isModalityActive` guard                                                                                                                           |
+| `auth.ts`     | API key resolution chain: auth.json → provider config → env vars (with allowlist)                                                                                                                 |
+| `models.ts`   | Load/merge/fetch models.json catalog, capability lookups, opencode config → provider config                                                                                                       |
+| `describe.ts` | Dynamic import of provider package + `ai.generateText` to describe an attachment                                                                                                                  |
+| `parts.ts`    | Scan messages for unsupported file parts, replace with synthetic text descriptions                                                                                                                |
+| `prompts.ts`  | Default analysis prompts per modality                                                                                                                                                             |
+| `server.ts`   | Plugin entry: hooks for `chat.message`, `chat.params`, `experimental.chat.messages.transform`, `config`, `event`. Orchestrates cache, concurrency limiter, fallback selection, transform pipeline |
+| `tui.tsx`     | `/fallback` interactive config UI: pick providers/models per modality, edit prompts and settings                                                                                                  |
 
 ### Dev workflow
 
 - `src/tui.tsx` is loaded directly by opencode — no build step needed for TUI changes. Restart opencode to pick up edits.
-- `src/server.ts` must be built with `bun run build` (or `bun run dev` for watch mode). opencode loads from `dist/server.js`.
+- `src/server.ts` must be built with `pnpm run build` (or `pnpm run dev` for watch mode). opencode loads from `dist/server.js`.
 - `.opencode/opencode.json` and `.opencode/tui.json` self-load the plugin from `"plugin": [".."]` for local development.
 - If `.opencode/*` config changes, restart opencode. Config is loaded at startup.
 
@@ -62,6 +63,7 @@ Flat `src/` directory — no subdirectories. Each file is a single concern.
 ### Auth resolution
 
 Keys are resolved in this priority order:
+
 1. `~/.local/share/opencode/auth.json` (key/apikey/apiKey field)
 2. opencode's provider config (`options.apiKey`)
 3. Environment variables (allowlisted per provider package)
