@@ -179,13 +179,19 @@ const server: Plugin = async (input: PluginInput, rawOptions?: PluginOptions) =>
 
   const runTransform = async (messages: MessageContainer[]) => {
     const config = readConfig(configPath);
-    if (!config.enabled) return;
+    if (!config.enabled) {
+      log("debug", "plugin disabled; transform skipped");
+      return;
+    }
 
     const sessionID = messages[0]?.info?.sessionID;
     if (!sessionID) return;
 
     const active = activeModels.get(sessionID);
-    if (!active) return;
+    if (!active) {
+      log("debug", "no active model for session; transform skipped", { sessionID });
+      return;
+    }
 
     const modelsData = await getCatalog();
     if (!modelsData) return;
@@ -229,16 +235,33 @@ const server: Plugin = async (input: PluginInput, rawOptions?: PluginOptions) =>
     const tasks: Array<Promise<void>> = [];
     const limit = limiter(Math.max(1, config.settings.concurrency));
 
+    const uncached = hits.filter(
+      (h) => plan.has(h.modality) && !cache.get(hashPart(h.part.mime, h.part.url)),
+    );
+    if (uncached.length > 0) {
+      const labels = [...new Set(uncached.map((h) => h.modality))].join(", ");
+      toast(
+        `Analyzing ${uncached.length} ${uncached.length === 1 ? "attachment" : "attachments"} (${labels})...`,
+        "info",
+      );
+    }
+
     for (const hit of hits) {
       const fb = plan.get(hit.modality);
       if (!fb) continue;
       const key = hashPart(hit.part.mime, hit.part.url);
-      if (cache.get(key)) {
-        descriptions.set(key, cache.get(key)!);
+      const cached = cache.get(key);
+      if (cached) {
+        descriptions.set(key, cached);
         continue;
       }
       const resolvedKey = resolveKey(modelsData, fb.providerID, { providerConfig });
-      if (!resolvedKey) continue;
+      if (!resolvedKey) {
+        const err = `no API key configured for ${fb.providerID}`;
+        descriptions.set(key, `[${hit.modality} analysis failed: ${err}]`);
+        log("warn", `${hit.modality} ${err}`);
+        continue;
+      }
       const userTexts = (messages[hit.messageIdx]?.parts ?? [])
         .filter((p: any) => p.type === "text" && typeof p.text === "string")
         .map((p: any) => p.text)
@@ -269,7 +292,9 @@ const server: Plugin = async (input: PluginInput, rawOptions?: PluginOptions) =>
               source: hit.part.filename || "inline",
             });
           } catch (error) {
-            log("warn", `${hit.modality} describe failed: ${errorMessage(error)}`);
+            const err = errorMessage(error);
+            descriptions.set(key, `[${hit.modality} analysis failed: ${err}]`);
+            log("warn", `${hit.modality} describe failed: ${err}`);
           } finally {
             clearTimeout(timer);
           }

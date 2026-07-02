@@ -72,8 +72,9 @@ export function replaceWithText(
     const description = describeFor(hit);
     if (!description) continue;
     const fallback = fallbackFor(hit.modality);
-    if (!fallback) continue;
-    const header = `[${hit.modality} analysed by ${fallback.providerID}/${fallback.modelID}]`;
+    const header = fallback
+      ? `[${hit.modality} analysed by ${fallback.providerID}/${fallback.modelID}]`
+      : `[${hit.modality}]`;
     const source = hit.part.filename ? `source: ${hit.part.filename}` : "source: inline";
     const text = `${header}\n${description}\n(${source})`;
     const parts = messages[hit.messageIdx]?.parts;
