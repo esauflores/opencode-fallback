@@ -2,6 +2,8 @@
 
 Multimodal fallback plugin for [opencode](https://opencode.ai). When your active model can't read images, PDFs, audio, or video, a separate fallback model describes the content and the description is injected as text into the chat.
 
+Based on [zensi-dev/opencode-multimodal](https://github.com/zensi-dev/opencode-multimodal).
+
 ## Setup
 
 ```bash

@@ -5,8 +5,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zensi-dev/opencode-fallback.git"
+    "url": "git+https://github.com/esauflores/opencode-fallback.git"
   },
+  "bugs": {
+    "url": "https://github.com/esauflores/opencode-fallback/issues"
+  },
+  "homepage": "https://github.com/esauflores/opencode-fallback#readme",
   "files": [
     "dist/server.js",
     "dist/server.js.map",
