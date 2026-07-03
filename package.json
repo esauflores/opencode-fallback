@@ -1,6 +1,6 @@
 {
   "name": "@esauflores/opencode-fallback",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Describe images, PDFs, and audio with a multimodal fallback model when your active model cannot read them.",
   "license": "MIT",
   "repository": {
